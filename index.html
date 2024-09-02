@@ -17,7 +17,7 @@
             <div id="panel__one">
                 <pre>
   /$$$$$$     /$$$$$  /$$$$$$  /$$     /$$
- /$  $$   |   __  $$ /$  $$|  $$   /$$/
+ /$     $$   |   _$$ /$     $$|  $$   /$$/
 | $$  \__/      | $$| $$  \ $$ \  $$ /$$/ 
 | $$            | $$| $$$$$$$$  \  $$$$/  
 | $$       /$$  | $$| $     $$   \  $$/   
@@ -27,17 +27,28 @@
                 </pre>
                 <p>Commands:</p>
                 <pre>
+
 [ls]    : Show files in the directory
 [cat]   : Read files
 [cd]    : Move directories
 [pwd]   : Show current directory
 [clear] : Clear output
                 </pre>
+                <p>File system:</p>
+                <pre>
+home/
+├─ xjaylandero/
+│  ├─ Documents/
+│  │  ├─ resume.pdf
+│  │  ├─ projects/
+│  ├─ README.md
+                </pre>
+
                 <p><span>xjaylandero:~$</span> <span class="command">cowsay Bye, world!</span></p>
                 <pre>
- ________________
+ ______________
 < Bye, world!  >
- ----------------
+ --------------
         \  ^__^
         \  (oo)\_______
            (__)\       )\/\
@@ -47,10 +58,10 @@
             </div>
             <div id="panel__two">
                 <!-- <span id="box">.</span> -->
-                <p><span>xjaylandero:~$</span> <input id="input" type="text" autofocus></p>
+                <div class="prompt__line"><span>xjaylandero:~$</span><input class="input__style" id="input" type="text" autofocus></div>
             </div>
         </div>
     </div>
 </body>
-<script src="./script.js"></script>
+<script type="module" src="./script.js"></script>
 </html>

@@ -20,6 +20,7 @@ body {
     /* display: grid; */
     /* grid-row: 2; */
     overflow-y: hidden;
+    max-width: 100%;
 }
 
 #terminal {
@@ -43,6 +44,7 @@ body {
 
 #panel__two {
     border-left: 1px solid white;
+    text-wrap: wrap;
 }
 
 #box {
@@ -63,14 +65,25 @@ body {
   }
 
 
-#input {
+#input, .input__style {
     background-color: transparent;
     color: snow;
     border: none;
     width: auto;
+    max-width: 100%;
+    text-wrap: wrap;
+    margin-left: 8px;
+}
+
+.input__style:disabled {
+    background-color: transparent;
 }
 
 #input:focus {
     outline: none;
     color: snow;
+}
+
+.file__display {
+    margin-right: 1rem;
 }
