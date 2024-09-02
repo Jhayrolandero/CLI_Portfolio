@@ -114,6 +114,7 @@ const enterEvent = (event, inputObj) => {
 
         const getValueFromPath = (obj, path) => {
           const keys = path.split('/');
+          console.log(keys)
           return keys.reduce((acc, key) => acc && acc[key] !== undefined ? acc[key] : undefined, obj);
         };
 
@@ -125,8 +126,18 @@ const enterEvent = (event, inputObj) => {
           case "cat":
             break
           case "cd":
-            const parameter = prompt[1] ? prompt[1] : 'home/xjaylandero' 
+            const parameter = prompt[1] ? pwd + "/" + prompt[1] : 'home/xjaylandero' 
             
+            // console.log(parameter)
+            let temp
+
+
+            parameter.split("/").reduce((acc,key) => console.log(acc, " ", key), )
+            // temp = parameter.split("/").map(path => path+"/")
+
+            console.log(temp)
+            // path.split("/").map(p => )
+
             if(getValueFromPath(filesystem, parameter)===undefined) {
               const errMsg = `-bash: cd :${parameter}: No such file or directory` 
               panelContainer2.append(createMessageNode(errMsg))
