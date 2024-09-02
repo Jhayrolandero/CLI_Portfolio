@@ -1,0 +1,76 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: hack;
+    src: url(ttf/Hack-Bold.ttf);
+}
+body {
+    font-family: hack;
+    background-color: #1a1b26;
+    color: snow;
+}
+
+
+#container{
+    height: 100vh;
+    /* display: grid; */
+    /* grid-row: 2; */
+    overflow-y: hidden;
+}
+
+#terminal {
+    display: flex;
+    height: 100%;
+}
+
+#header {
+    background-color: black;
+    font-size: 0.8rem;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    text-align: center;
+}
+
+
+#panel__one, #panel__two {
+    flex: 1;
+    font-size: 0.8rem;
+}
+
+#panel__two {
+    border-left: 1px solid white;
+}
+
+#box {
+    width: 20px;
+    height: 100%;
+    background: snow;
+    animation: blink 1s step-start 0s infinite;
+}
+
+.command {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+@keyframes blink {
+    50% {
+      opacity: 0.0;
+    }
+  }
+
+
+#input {
+    background-color: transparent;
+    color: snow;
+    border: none;
+    width: auto;
+}
+
+#input:focus {
+    outline: none;
+    color: snow;
+}
