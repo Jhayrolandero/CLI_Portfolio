@@ -1,10 +1,18 @@
 // imports
 import Stack  from "./commandStack.js";
+import PStack from "./pathStack.js";
 
-// Variables
-const input = document.getElementById('input');
-const container = document.getElementById('container')
+/*
+ * 
+ * VARIABLES 
+ * 
+ */
+
+const input           = document.getElementById('input');
+const container       = document.getElementById('container')
 const panelContainer2 = document.getElementById('panel__two')
+const dirContainer    = document.getElementById('directory')
+
 const filesystem = {
   home: {
     xjaylandero: {
@@ -22,8 +30,27 @@ const filesystem = {
 let pwd = "home/xjaylandero"
 let currDirectory = filesystem.home.xjaylandero
 
-const commandStack = new Stack()
-// Functions
+const commandStack  = new Stack()
+const pathStack     = new PStack()
+
+/*
+ * 
+ * FUNCTIONS 
+ * 
+ */
+
+const __init__ = () => {
+  input.addEventListener('keydown', (event) => enterEvent(event, input))
+  input.addEventListener('input', function() {
+    console.log(this.style.width)
+    this.style.width = `${this.value.length + 1}ch`; 
+  });
+  container.addEventListener('click', () => {
+    input.focus()
+  })
+  dirContainer.textContent = showCurrDir().replace("home/xjaylandero", '~') + '$'
+} 
+
 const createMessageNode = (msg) => {
   const newParagraph = document.createElement('p');
   newParagraph.textContent = msg;
@@ -34,7 +61,6 @@ const createMessageNode = (msg) => {
 const displayFileNode = (files) => {
   const newParagraph = document.createElement('p');
 
-  console.log(files)
   files.forEach(file => {
     const spanNode = document.createElement('span')
     spanNode.setAttribute('class', 'file__display')
@@ -52,7 +78,14 @@ const createPromptNode = () => {
   // Create span for the prompt
   const prompt = document.createElement('span')
   
-  prompt.textContent = "xjaylandero:~$"
+  // For directory
+  const dir = document.createElement('span')
+
+
+  prompt.textContent = "xjaylandero:"
+
+
+  dir.textContent = showCurrDir().replace("home/xjaylandero", '~') + '$'
 
   // Create input for the prompt
   const inputLine = document.createElement('input')
@@ -75,6 +108,7 @@ const createPromptNode = () => {
   })
 
   promptLine.append(prompt)
+  promptLine.append(dir)
   promptLine.append(inputLine)
   
   panelContainer2.append(promptLine)
@@ -99,6 +133,39 @@ const cleanInput = (inputObj) => {
   inputObj.removeAttribute('autofocus')
 }
 
+const wgetFile = () => {
+  fetch('./resume.pdf')
+  .then(res => { 
+    return res.blob() 
+  })
+  .then(blob => {
+    // Create a Blob URL
+    const url = window.URL.createObjectURL(blob);
+
+    // Use the download attribute on a hidden link
+    const a = document.createElement('a');
+    a.style.display = 'none';  // Hide the element
+    a.href = url;
+    a.download = 'test.txt';
+
+    // Append the link to the document body
+    document.body.appendChild(a);
+
+    // Automatically start download
+    a.dispatchEvent(new MouseEvent('click'));  // Trigger the download
+
+    // Clean up by revoking the object URL and removing the anchor element
+    setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    }, 0);
+})
+.catch(error => {
+    console.error('There was an error downloading the file:', error);
+});
+}
+
+
 const enterEvent = (event, inputObj) => {
     if (event.key === 'Enter') {
         event.preventDefault();
@@ -114,8 +181,7 @@ const enterEvent = (event, inputObj) => {
 
         const getValueFromPath = (obj, path) => {
           const keys = path.split('/');
-          console.log(keys)
-          return keys.reduce((acc, key) => acc && acc[key] !== undefined ? acc[key] : undefined, obj);
+        return keys.reduce((acc, key) => acc && acc[key] !== undefined ? acc[key] : undefined, obj);
         };
 
         switch (argument) {
@@ -128,21 +194,25 @@ const enterEvent = (event, inputObj) => {
           case "cd":
             const parameter = prompt[1] ? pwd + "/" + prompt[1] : 'home/xjaylandero' 
             
-            // console.log(parameter)
-            let temp
+            pathStack.reset()
 
+            // Split the directory to paths
+            parameter.split('/').forEach(path => {
+              if(path === "..") {
+                pathStack.pop()
+              } else {
+                pathStack.push(path)
+              }
+            })
+            
+            //  Join the sanitize path
+            const paths = pathStack.path.join("/")
 
-            parameter.split("/").reduce((acc,key) => console.log(acc, " ", key), )
-            // temp = parameter.split("/").map(path => path+"/")
-
-            console.log(temp)
-            // path.split("/").map(p => )
-
-            if(getValueFromPath(filesystem, parameter)===undefined) {
+            if(getValueFromPath(filesystem, paths)===undefined) {
               const errMsg = `-bash: cd :${parameter}: No such file or directory` 
               panelContainer2.append(createMessageNode(errMsg))
             } else {
-              pwd = parameter
+              pwd = paths
             }
             break
           case "pwd":
@@ -150,6 +220,10 @@ const enterEvent = (event, inputObj) => {
             break
           case "clear":
             clearOutput()
+            break
+          case "wget":
+            wgetFile()
+            // clearOutput()
             break
           default:
             const errMsg = `Command '${argument}' not found` 
@@ -161,7 +235,6 @@ const enterEvent = (event, inputObj) => {
         createPromptNode()
         commandStack.reset()
         
-        // console.log(argument)
     } else if (event.key === 'ArrowUp') {
       inputObj.value = commandStack.peek("up") 
     } else if (event.key === 'ArrowDown') {
@@ -169,11 +242,4 @@ const enterEvent = (event, inputObj) => {
     }
 }
 
-input.addEventListener('keydown', (event) => enterEvent(event, input))
-input.addEventListener('input', function() {
-  console.log(this.style.width)
-  this.style.width = `${this.value.length + 1}ch`; 
-});
-container.addEventListener('click', () => {
-  input.focus()
-})
+__init__()
