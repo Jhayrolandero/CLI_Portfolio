@@ -13,16 +13,61 @@ const container       = document.getElementById('container')
 const panelContainer2 = document.getElementById('panel__two')
 const dirContainer    = document.getElementById('directory')
 
+
+// WTF is this
+// const filesystem = {
+//   home: {
+//     type: "Directory",
+//     contents: [
+//       {
+//         xjaylandero: {
+//           type: "Directory",
+//           contents: [
+//             {
+//               Documents : {
+//                 type: "Directory",
+//                 contents: [
+//                   {
+//                     "resume.pdf": "This is a resume",
+//                     Projects : {},
+//                     Achievements: {},
+//                     Skills: {},
+//                     Contact: {},
+//                     "About_Me.txt": {
+//                       type: "text",
+//                       content: "LOL"
+//                     }
+//                   }
+//                 ]
+//               },
+//             },
+//             {
+//               "README.txt": {
+//                 type: "text",
+//                 content: "LOL"
+//               }
+//             }
+//           ]
+//         }
+//       }
+//     ]
+//   }
+// }
 const filesystem = {
   home: {
     xjaylandero: {
       Documents : {
         "resume.pdf": "This is a resume",
-        projects : {
-          
-        }
+        "Projects.txt": "",
+        "Achievements.txt": "",
+        "Skills.txt": "",
+        "Contacts.txt": "",
+        "About_Me.txt": `Passionate software engineer, aspiring
+                        A.I engineer, and pen tester enthusiast
+                        with a vision of creating impactful
+                        software solutions to benefit society.`
       },
-      "README.md": "LOL"
+      "README.txt": "LOL"
     }
   }
 }
@@ -222,8 +267,23 @@ const enterEvent = (event, inputObj) => {
             clearOutput()
             break
           case "wget":
+            let errMsg1 = "" 
+
+            if(prompt[1] === undefined) {
+              errMsg1 = 'wget: missing URL'
+              panelContainer2.append(createMessageNode(errMsg1))
+              break
+            } 
+                        
+            const file = prompt[1]
+            
+            if(file !== "resume.pdf") {
+              errMsg1 = 'wget: file cannot be download'
+              panelContainer2.append(createMessageNode(errMsg1))
+              break
+            }
+
             wgetFile()
-            // clearOutput()
             break
           default:
             const errMsg = `Command '${argument}' not found` 
