@@ -103,11 +103,21 @@ const createMessageNode = (msg) => {
   return newParagraph
 }
 
-const displayFileNode = (files) => {
-  const newParagraph = document.createElement('p');
+const createPreMessageNode = (msg) => {
+  const newParagraph = document.createElement('pre');
+  newParagraph.setAttribute("wrap", '')
+  newParagraph.setAttribute("class", 'cat__output')
+  newParagraph.textContent = msg;
+  
+  return newParagraph
+}
 
+const displayFileNode = (files) => {
+  const newParagraph = document.createElement('div');
+
+  newParagraph.setAttribute('class', 'file__container')
   files.forEach(file => {
-    const spanNode = document.createElement('span')
+    const spanNode = document.createElement('p')
     spanNode.setAttribute('class', 'file__display')
     spanNode.textContent = file
     newParagraph.append(spanNode)
@@ -210,8 +220,25 @@ const wgetFile = () => {
 });
 }
 
+const catFile = async (file) => {
+  try {
+      const response = await fetch(file);
+      const blob = await response.blob();
 
-const enterEvent = (event, inputObj) => {
+      return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsText(blob);
+      });
+  } catch (error) {
+      console.error('There was an error downloading the file:', error);
+      return null;  // Return null or some error message
+  }
+};
+
+
+const enterEvent = async (event, inputObj) => {
     if (event.key === 'Enter') {
         event.preventDefault();
     
@@ -235,6 +262,31 @@ const enterEvent = (event, inputObj) => {
             panelContainer2.append(displayFileNode(keys))
             break
           case "cat":
+            let errMsg2 = "" 
+
+            if(prompt[1] === undefined) {
+              errMsg2 = 'cat: missing file patameter'
+            } 
+                        
+            const file2 = prompt[1]
+            
+            if((showCurrDir() === 'home/xjaylandero' && !["README.txt"].includes(file2)) || (showCurrDir() === 'home/xjaylandero/Documents' && !["About_Me.txt", "Achievements.txt", "Contacts.txt", "Projects.txt", "Skills.txt"].includes(file2))) {
+              errMsg2 = `cat: file '${file2}' cannot be read`
+            } 
+            
+            if(errMsg2 !== "") {
+              panelContainer2.append(createMessageNode(errMsg2))
+              break
+            }
+
+            const fileContent = await catFile(file2);
+            if (fileContent !== null) {
+                console.log(fileContent);
+                panelContainer2.append(createPreMessageNode(fileContent));
+            } else {
+                console.log("Failed to load file.");
+            }
+            // console.log(catFile())
             break
           case "cd":
             const parameter = prompt[1] ? pwd + "/" + prompt[1] : 'home/xjaylandero' 
@@ -282,9 +334,24 @@ const enterEvent = (event, inputObj) => {
               panelContainer2.append(createMessageNode(errMsg1))
               break
             }
-
+            
             wgetFile()
             break
+          case 'fs':
+            const msg = `
+home/
+├─ xjaylandero/
+│  ├─ Documents/
+│  │  ├─ resume.pdf
+│  │  ├─ Projects.txt
+│  │  ├─ Achievements.txt
+│  │  ├─ Skills.txt
+│  │  ├─ Contacts.txt
+│  │  ├─ About_Me.txt
+│  ├─ README.md
+            `
+            panelContainer2.append(createPreMessageNode(msg))
+            break;
           default:
             const errMsg = `Command '${argument}' not found` 
             panelContainer2.append(createMessageNode(errMsg))
