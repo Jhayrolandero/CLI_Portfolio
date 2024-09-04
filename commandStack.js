@@ -13,14 +13,20 @@ export default class Stack {
     }
 
     peek(dir) {
-        console.log(this.lineHistory, " ", this.prompts, " ", this.prompts.length)
-        // if(this.prompts.length !== 0 && (this.lineHistory > this.prompts.length || this.lineHistory < this.prompts.length)) return "empty"
+
+        
+
         switch (dir) {
             case "up":
-                return this.prompts[this.prompts.length - (1 + this.lineHistory++)] 
+                return this.prompts[this.prompts.length - (1 + this.lineHistory+1)] ? this.prompts[this.prompts.length - (1 + this.lineHistory++)] : this.prompts[this.prompts.length - (1 + this.lineHistory)]         
             case "down":
-                return this.prompts[this.prompts.length - (1 + this.lineHistory--)]
+                if (this.lineHistory > 0) {
+                    this.lineHistory--;
+                }
+                return this.prompts[this.prompts.length - (1 + this.lineHistory)]
+                       || this.prompts[this.prompts.length - (this.lineHistory++)];
         }
+        
 
     }
 

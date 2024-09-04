@@ -107,6 +107,7 @@ const createPreMessageNode = (msg) => {
   const newParagraph = document.createElement('pre');
   newParagraph.setAttribute("wrap", '')
   newParagraph.setAttribute("class", 'cat__output')
+  newParagraph.setAttribute("class", 'gradient-text')
   newParagraph.textContent = msg;
   
   return newParagraph
@@ -136,12 +137,13 @@ const createPromptNode = () => {
   // For directory
   const dir = document.createElement('span')
 
-
+  
   prompt.textContent = "xjaylandero:"
+  prompt.setAttribute('class', 'prompt__user')
 
 
   dir.textContent = showCurrDir().replace("home/xjaylandero", '~') + '$'
-
+  dir.setAttribute("id", "directory")
   // Create input for the prompt
   const inputLine = document.createElement('input')
 
@@ -189,7 +191,7 @@ const cleanInput = (inputObj) => {
 }
 
 const wgetFile = () => {
-  fetch('./resume.pdf')
+  fetch('./public/resume.pdf')
   .then(res => { 
     return res.blob() 
   })
@@ -222,7 +224,7 @@ const wgetFile = () => {
 
 const catFile = async (file) => {
   try {
-      const response = await fetch(file);
+      const response = await fetch(`./public/${file}`);
       const blob = await response.blob();
 
       return new Promise((resolve, reject) => {
@@ -352,6 +354,15 @@ home/
             `
             panelContainer2.append(createPreMessageNode(msg))
             break;
+          case 'neofetch':
+            const fileContent1 = await catFile("neofetch.txt");
+            if (fileContent1 !== null) {
+                console.log(fileContent1);
+                panelContainer2.append(createPreMessageNode(fileContent1));
+            } else {
+                console.log("Failed to load file.");
+            }
+            break
           default:
             const errMsg = `Command '${argument}' not found` 
             panelContainer2.append(createMessageNode(errMsg))

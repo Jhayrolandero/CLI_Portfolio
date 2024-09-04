@@ -14,6 +14,10 @@ body {
     color: snow;
 }
 
+input[type="text"]
+{
+    font-family: hack;
+    }
 
 #container{
     height: 100vh;
@@ -21,21 +25,29 @@ body {
     /* grid-row: 2; */
     overflow-y: hidden;
     max-width: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
 }
 
 #terminal {
     display: flex;
-    height: 100%;
+    /* height: 100%; */
+}
+
+#header, footer {
+    background-color: #01010a;
+    font-size: 0.8rem;
+    padding: 0.25em;
 }
 
 #header {
-    background-color: black;
-    font-size: 0.8rem;
-    padding-top: 0.25em;
-    padding-bottom: 0.25em;
     text-align: center;
 }
 
+footer {
+    display: flex;
+    justify-content: space-between;
+}
 
 #panel__one, #panel__two {
     font-size: 0.8rem;
@@ -108,4 +120,20 @@ body {
 .cat__output {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+}
+
+.prompt__user, #directory {
+    color: #fcba03;
+}
+
+.neofetch{
+    color: chartreuse;
+}
+
+.gradient-text {
+    background: linear-gradient(to right, #0bd8d4, #0793b7 40%, #072650);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
 }
