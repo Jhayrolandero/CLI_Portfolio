@@ -17,7 +17,7 @@ body {
 input[type="text"]
 {
     font-family: hack;
-    }
+}
 
 #container{
     height: 100vh;
@@ -26,12 +26,12 @@ input[type="text"]
     overflow-y: hidden;
     max-width: 100%;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto 1fr;
 }
 
 #terminal {
     display: flex;
-    /* height: 100%; */
+    overflow-y: hidden;
 }
 
 #header, footer {
@@ -63,6 +63,7 @@ footer {
     border-left: 1px solid white;
     text-wrap: wrap;
     overflow-y: auto;
+    max-height: 100%;
 }
 
 #box {
